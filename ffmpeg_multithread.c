@@ -18,16 +18,16 @@ static struct termios tty_state_current;
 int wait_flag=TRUE;   
 volatile int STOP=FALSE;
 // Threads 1, 2 and 3 declared as global
-pthread_t func_one_thread, func_two_thread, func_three_thread;
+pthread_t func_one_thread, func_two_thread;
  
 // Thread conditions
-pthread_cond_t thread_cond_one, thread_cond_two, thread_cond_three;
+pthread_cond_t thread_cond_one, thread_cond_two;
  
 // Thread mutex to go with thread conditions
 pthread_mutex_t mutex_flag;
  
 // Boolean flags
-short tflag_one_on, tflag_two_on, tflag_three_on, quit_flag = FALSE;
+short tflag_one_on, tflag_two_on, quit_flag = FALSE;
  
 // Counters for threads 1 and 2
 int count_one, count_two = 0;
@@ -79,7 +79,6 @@ void sig_handler(int signo)
     {
      tflag_one_on = FALSE;
      tflag_two_on = FALSE; 	    
-     tflag_three_on = FALSE;
     }
     else if (signo == SIGIO)	
     {
@@ -98,7 +97,8 @@ void *watch_for_user_keypress()
  
   do {
     getKeyPress = getchar();
-    switch (getKeyPress) {
+    switch (getKeyPress) 
+    {
       case 49://detecting keypress 1
         if(!tflag_one_on) {
           tflag_one_on = TRUE;
@@ -119,15 +119,6 @@ void *watch_for_user_keypress()
           tflag_two_on = FALSE;
         }
         break;
-      case 51: //detecting keypress 3
-        if(!tflag_three_on) {
-          tflag_three_on = TRUE;
-          pthread_mutex_lock(&mutex_flag);
-          pthread_cond_signal(&thread_cond_three);
-          pthread_mutex_unlock(&mutex_flag);
-        } else {
-          tflag_three_on = FALSE;
-        }
     }
   } while(getKeyPress != 48); //detecting keypress 0
  
@@ -135,8 +126,7 @@ void *watch_for_user_keypress()
  
   pthread_cond_broadcast(&thread_cond_one);
   pthread_cond_broadcast(&thread_cond_two);
-  pthread_cond_broadcast(&thread_cond_three);
- 
+  
   pthread_exit(NULL);
 }
  
