@@ -10,8 +10,13 @@ func_two_thread shows data received on the serial port.
 
 Inputs to the program are:
 
-1 – is a toggle switch to suspend/resume thread_one
-2 – is a toggle switch to suspend/resume thread_two
+1 – is a toggle switch to suspend/resume thread_one for ffmpeg
+
+2 – is a toggle switch to suspend/resume thread_two fro serial reception
+
 0 – ends watch_for_user_keypress and signals all the threads to stop their execution and quit
+
 Other keypress – nothing happens
+
+Anothe file com.c is responsible for displaying data recieved on serial port ttyS0. It has been hard-coded to work at 57600 Baud rate.	
 
